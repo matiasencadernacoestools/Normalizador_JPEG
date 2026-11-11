@@ -108,6 +108,30 @@ footer{font-size:13px;color:#68778d;padding:2px 4px 0}
  .btn{width:100%}
  .stat{flex:1 1 100%}
 }
+
+/* Abas do aplicativo */
+.tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1px solid #dce3ed;padding:0 4px 10px;flex-wrap:wrap}
+.tab{font:inherit;font-weight:800;padding:12px 20px;border:1px solid #dbe2ec;background:#fff;color:#55657c;border-radius:12px;cursor:pointer}
+.tab.active{background:var(--gold);border-color:var(--gold);color:#fff;box-shadow:0 4px 12px rgba(201,154,6,.18)}
+.tabPane[hidden]{display:none!important}
+.compControls{display:flex;gap:15px;align-items:end;flex-wrap:wrap;margin-bottom:16px}
+.compField{display:grid;gap:7px;font-size:14px;font-weight:700;color:#475a73}
+.compSelect{min-width:200px;border:1px solid #d7dee7;background:#fff;border-radius:12px;padding:12px 14px;font:inherit;font-size:16px;color:#26344b}
+.compHelp{background:#fff8e6;border-left:4px solid var(--gold);padding:12px 15px;border-radius:8px;font-size:14px;line-height:1.6;color:#5b5140}
+.compProgress{margin-top:14px}
+.compProgress[hidden]{display:none!important}
+.compTrack{height:14px;border-radius:20px;background:#e8edf3;overflow:hidden}
+.compFill{height:100%;background:linear-gradient(90deg,#a47b00,#dbaf16,#a47b00);transition:width .2s}
+.compStats{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}
+.compStats .stat{min-width:185px}
+.compFileInput{display:none}
+.compAlert{margin:12px 0;padding:12px;border-radius:10px;background:#fff1d2;color:#855600;font-size:14px;line-height:1.5}
+.compAlert[hidden]{display:none!important}
+.compActions{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:20px 0 12px}
+.compActions h2{margin:0;font-size:22px}
+.compActions .buttons{display:flex;gap:10px;flex-wrap:wrap}
+.compDownload{border:0;background:none;color:#a87800;text-decoration:underline;font-weight:800;cursor:pointer}
+@media(max-width:780px){.tabs .tab{flex:1}.compActions .buttons{width:100%}.compActions .btn{width:100%}}
 </style>
 </head>
 <body>
@@ -120,12 +144,17 @@ footer{font-size:13px;color:#68778d;padding:2px 4px 0}
     <div class="headerText">
       <div class="brand">MATIAS ENCADERNAÇÕES</div>
       <h1 class="headerTitle">Normalizador de <span class="gold">JPEG</span></h1>
-      <p class="headerDesc">Prepara a identificação de arquivos JPEG para compatibilidade, sem recomprimir a imagem nem alterar seus dados fotográficos. Tudo acontece no seu navegador.</p>
+      <p class="headerDesc">Prepare suas fotografias para o Laboratório Matias com duas ferramentas: Normalizar JPG, que corrige a identificação dos arquivos sem alterar a imagem ou sua qualidade, e Comprimir JPG, que reduz o tamanho dos arquivos preservando ao máximo a qualidade visual. Tudo de forma rápida, segura e diretamente no seu navegador.</p>
     </div>
   </div>
 </header>
 </div>
 <main>
+<nav class="tabs" aria-label="Funções do normalizador">
+ <button class="tab active" id="tabNormal" aria-selected="true" type="button">Normalizar JPG (sem perdas)</button>
+ <button class="tab" id="tabCompress" aria-selected="false" type="button">Comprimir JPG</button>
+</nav>
+<div id="normalPane" class="tabPane">
   <section class="panel">
     <div id="drop" class="drop" role="button" tabindex="0" aria-label="Selecionar fotografias JPEG">
       <svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="#c99a06" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"></path></svg>
@@ -182,7 +211,47 @@ footer{font-size:13px;color:#68778d;padding:2px 4px 0}
     </div>
   </section>
 
-  <footer>Matias Encadernações • Processamento local e sem recompressão • Os originais nunca são substituídos.</footer>
+</div>
+<div id="compressPane" class="tabPane" hidden>
+ <section class="panel">
+  <div class="compControls">
+   <label class="compField" for="targetMB">Tamanho máximo desejado por fotografia
+    <select id="targetMB" class="compSelect">
+      <option value="15">15 MB</option><option value="10">10 MB</option><option value="5" selected>5 MB</option><option value="3">3 MB</option>
+    </select>
+   </label>
+   <div class="compField"><span>Resolução máxima</span><strong>4.000 pixels no lado maior</strong></div>
+   <div class="compField"><span>DPI de saída</span><strong>Original até 240 DPI</strong></div>
+  </div>
+  <div class="drop" id="compDrop" role="button" tabindex="0" aria-label="Selecionar imagens para compressão">
+    <svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="#c99a06" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"></path></svg>
+    <strong>Arraste fotos JPG para comprimir</strong>
+    <p>Até 100 arquivos por lote (.jpg e .jpeg), processados no navegador.</p>
+    <span class="btn" aria-hidden="true">Selecionar imagens</span>
+  </div>
+  <input id="compInput" class="compFileInput" type="file" multiple accept=".jpg,.jpeg,image/jpeg">
+  <div class="compStats">
+   <div class="stat"><span class="k">Limite por lote</span><span class="v">100 arquivos</span></div>
+   <div class="stat"><span class="k">Arquivos selecionados</span><span class="v" id="compCount">0</span></div>
+   <div class="stat"><span class="k">Total original</span><span class="v" id="compTotal">0 MB</span></div>
+   <div class="stat"><span class="k">Total gerado</span><span class="v" id="compOutputTotal">0 MB</span></div>
+  </div>
+  <div id="compAlert" class="compAlert" role="alert" hidden></div>
+  <div class="compHelp"><strong>Como funciona:</strong> se a imagem já atender ao tamanho e aos 4.000 pixels, ela é apenas normalizada sem recompressão (caso necessário). Quando houver redução, o navegador gera um novo JPG, buscando a melhor qualidade possível até o limite escolhido. A resolução é proporcional, sem ampliação. O DPI conhecido é preservado até 240 DPI. <strong>Atenção:</strong> outros metadados EXIF, como data, GPS e câmera, e perfis ICC podem não ser preservados na recompressão.</div>
+  <div class="compProgress" id="compProgress" hidden>
+    <div class="progressHead"><strong id="compProgressLabel">Preparando…</strong><span id="compPercent">0%</span></div>
+    <div class="compTrack"><div class="compFill" id="compFill" style="width:0%"></div></div>
+  </div>
+ </section>
+ <section id="compResults" class="panel" hidden>
+   <div class="compActions">
+    <div><h2>Arquivos comprimidos</h2><div class="summary" id="compSummary"></div></div>
+    <div class="buttons"><button class="btn secondary" type="button" id="compClear">Limpar lista</button><button class="btn" type="button" id="compZip">Baixar todos em ZIP</button></div>
+   </div>
+   <div class="tablewrap"><table><thead><tr><th>Arquivo</th><th>Original</th><th>Final</th><th>Resultado</th><th>Download</th></tr></thead><tbody id="compRows"></tbody></table></div>
+ </section>
+</div>
+<footer>Matias Encadernações • Processamento local no navegador • Os arquivos originais nunca são substituídos.</footer>
 </main>
 
 <script>
@@ -410,6 +479,198 @@ $('zip').addEventListener('click', async () => {
 
 updateStats();
 updateBatchWarning(0,0);
+
+// ── Navegação entre as duas funções ───────────────────────────
+function setActiveTab(which){
+ const normal=which==='normal';
+ $('normalPane').hidden=!normal; $('compressPane').hidden=normal;
+ $('tabNormal').classList.toggle('active',normal); $('tabCompress').classList.toggle('active',!normal);
+ $('tabNormal').setAttribute('aria-selected',String(normal));
+ $('tabCompress').setAttribute('aria-selected',String(!normal));
+}
+$('tabNormal').addEventListener('click',()=>setActiveTab('normal'));
+$('tabCompress').addEventListener('click',()=>setActiveTab('compress'));
+
+// ── Compactação JPEG (com perda), independente do normalizador sem perdas ──
+const compItems=[];
+let compBusy=false;
+const byteMB=1024*1024;
+const compYield=()=>new Promise(resolve=>setTimeout(resolve,0));
+function compWarn(message){$('compAlert').hidden=!message;$('compAlert').textContent=message||'';}
+function compSetProgress(show,percent,label){
+ $('compProgress').hidden=!show;
+ $('compFill').style.width=Math.min(100,Math.max(0,percent))+'%';
+ $('compPercent').textContent=Math.round(percent)+'%';
+ $('compProgressLabel').textContent=label;
+}
+function compUpdate(){
+ const count=compItems.length, ready=compItems.filter(x=>x.bytes), total=compItems.reduce((n,x)=>n+x.size,0), out=ready.reduce((n,x)=>n+x.bytes.length,0);
+ $('compCount').textContent=count; $('compTotal').textContent=fmtSize(total); $('compOutputTotal').textContent=fmtSize(out);
+ $('compResults').hidden=count===0;
+ $('compSummary').textContent=`${ready.length} arquivo(s) pronto(s) • ${count-ready.length} com erro • ${fmtSize(total)} originais → ${fmtSize(out)} finais`;
+ $('compZip').disabled=compBusy||!ready.length;
+ $('compClear').disabled=compBusy;
+ $('compRows').innerHTML=compItems.map((x,i)=>`<tr><td><strong>${esc(x.name)}</strong>${x.dim?`<div class="muted">${esc(x.dim)}</div>`:''}</td><td>${fmtSize(x.size)}</td><td>${x.bytes?fmtSize(x.bytes.length):'—'}</td><td><span class="status ${x.error?'error':x.changed?'changed':'neutral'}">${x.error?'Erro':x.changed?'Comprimido':'Sem recompressão'}</span><div class="muted">${esc(x.note||x.error||'')}</div></td><td>${x.bytes?`<button class="compDownload" data-ci="${i}">Baixar JPG</button>`:'—'}</td></tr>`).join('');
+}
+function jpegData(bytes){
+ // Retorna metadados de densidade; orientação EXIF é aplicada no navegador ao desenhar.
+ let i=2,jf=null,exif=null;
+ if(bytes[0]!==255||bytes[1]!==216)throw Error('Não é JPEG.');
+ while(i+4<=bytes.length&&bytes[i]===255){
+  const marker=bytes[i+1];if(marker===218||marker===217)break;
+  const len=read16(bytes,i+2);if(len<2||i+2+len>bytes.length)break;
+  const start=i+4,end=i+2+len;
+  if(marker===224&&len>=16&&String.fromCharCode(...bytes.subarray(start,start+5))==='JFIF\0'){
+    jf={units:bytes[start+7],x:read16(bytes,start+8),y:read16(bytes,start+10)};
+  }
+  if(marker===225&&len>=14&&String.fromCharCode(...bytes.subarray(start,start+6))==='Exif\0\0')exif=bytes.subarray(start+6,end);
+  i=end;
+ }
+ return {jf,exif};
+}
+function exifDPI(exif){
+ if(!exif||exif.length<8)return null;
+ const le=exif[0]===73&&exif[1]===73;
+ if(!le&&!(exif[0]===77&&exif[1]===77))return null;
+ const dv=new DataView(exif.buffer,exif.byteOffset,exif.byteLength);
+ const u16=o=>o+2<=exif.length?dv.getUint16(o,le):null;
+ const u32=o=>o+4<=exif.length?dv.getUint32(o,le):null;
+ const ifd=u32(4);if(ifd===null||ifd+2>exif.length)return null;
+ let px=null,py=null,unit=null;
+ const count=Math.min(u16(ifd)||0,4096);
+ for(let n=0;n<count;n++){
+  const pos=ifd+2+12*n;if(pos+12>exif.length)break;
+  const tag=u16(pos),type=u16(pos+2),qty=u32(pos+4),value=u32(pos+8);
+  if(tag===296&&type===3&&qty===1)unit=u16(pos+8);
+  if((tag===282||tag===283)&&type===5&&qty===1&&value+8<=exif.length){
+   const den=u32(value+4),num=u32(value);const v=den?num/den:null;
+   if(tag===282)px=v;else py=v;
+  }
+ }
+ const d=px||py;
+ return d&&unit===2?d:d&&unit===3?d*2.54:null;
+}
+function getDPI(bytes){
+ const {jf,exif}=jpegData(bytes);
+ const fromExif=exifDPI(exif);
+ if(Number.isFinite(fromExif)&&fromExif>0)return Math.min(240,fromExif);
+ if(jf&&jf.x>0){
+  if(jf.units===1)return Math.min(240,jf.x);
+  if(jf.units===2)return Math.min(240,jf.x*2.54);
+ }
+ return null; // não inventa DPI quando o arquivo não declara resolução física
+}
+function patchDensity(bytes,dpi){
+ // Cabeçalho de saída do canvas normalmente é JFIF. Atualiza só densidade JFIF, se presente.
+ const out=new Uint8Array(bytes);
+ let i=2;
+ while(i+4<out.length&&out[i]===255){
+  const marker=out[i+1];if(marker===218)break;
+  const length=read16(out,i+2);if(length<2||i+2+length>out.length)break;
+  if(marker===224&&length>=16&&out[i+4]===74&&out[i+5]===70&&out[i+6]===73&&out[i+7]===70&&out[i+8]===0){
+    if(dpi){const v=Math.max(1,Math.min(65535,Math.round(dpi)));out[i+11]=1;out[i+12]=v>>8;out[i+13]=v&255;out[i+14]=v>>8;out[i+15]=v&255;}
+    else{out[i+11]=0;out[i+12]=0;out[i+13]=1;out[i+14]=0;out[i+15]=1;}
+    return out;
+  }
+  i+=length+2;
+ }
+ // Se o encoder não forneceu JFIF, insere o mesmo cabeçalho aprovado pela Matias.
+ const r=normalize(out).bytes;
+ return dpi?patchDensity(r,dpi):r;
+}
+function toJPEG(canvas,quality){
+ return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob&&blob.type==='image/jpeg'?resolve(blob):reject(Error('O navegador não conseguiu gerar JPEG.')),'image/jpeg',quality));
+}
+async function compOne(file,targetBytes){
+ if(!/\.jpe?g$/i.test(file.name))throw Error('Formato não aceito. Selecione JPG/JPEG.');
+ const original=new Uint8Array(await file.arrayBuffer());
+ identify(original); // valida cabeçalho/estrutura JPEG sem alterar a foto
+ const dpi=getDPI(original);
+ const url=URL.createObjectURL(file);
+ let bitmap;
+ try{bitmap=await createImageBitmap(file,{imageOrientation:'from-image'});}
+ catch(e){URL.revokeObjectURL(url);throw Error('Não foi possível decodificar a fotografia neste navegador.');}
+ URL.revokeObjectURL(url);
+ let w=bitmap.width,h=bitmap.height;
+ const factor=Math.min(1,4000/Math.max(w,h));
+ const outW=Math.max(1,Math.round(w*factor)),outH=Math.max(1,Math.round(h*factor));
+ const needsResize=factor<1;
+ const needsCompression=original.length>targetBytes||needsResize||(dpi!==null&&dpi!==getRawDPI(original));
+ // Importante: JPEG abaixo da meta, <=4000 px e DPI <=240 é preservado integralmente.
+ if(!needsCompression){bitmap.close();const norm=normalize(original);return {bytes:norm.bytes,changed:false,note:norm.changed?'JFIF acrescentado sem alterar os pixels.':'Arquivo original mantido.',dim:`${w} × ${h} px${dpi?' • '+Math.round(dpi)+' DPI':''}`};}
+ const canvas=document.createElement('canvas');canvas.width=outW;canvas.height=outH;
+ const ctx=canvas.getContext('2d',{alpha:false});
+ if(!ctx){bitmap.close();throw Error('Falha ao criar contexto de imagem.');}
+ ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(bitmap,0,0,outW,outH);bitmap.close();
+ // Procura a maior qualidade que respeite a meta. Se não conseguir, sinaliza.
+ let best=null,bestQ=0;
+ let low=.58,high=.98;
+ for(let n=0;n<9;n++){
+  const q=n===0?.98:(low+high)/2;
+  const b=await toJPEG(canvas,q);
+  if(b.size<=targetBytes){if(q>bestQ){best=b;bestQ=q;}low=q;}else high=q;
+  await compYield();
+ }
+ if(!best){best=await toJPEG(canvas,.58);bestQ=.58;}
+ const raw=new Uint8Array(await best.arrayBuffer());
+ const bytes=patchDensity(raw,dpi);
+ const met=bytes.length<=targetBytes;
+ const note=`${met?'Meta atendida.':'Limite não atingido sem reduzir ainda mais a qualidade.'} ${outW} × ${outH} px • qualidade ${Math.round(bestQ*100)}% • ${dpi?Math.round(dpi)+' DPI':'DPI não informado no original'} • JFIF presente.`;
+ return {bytes,changed:true,note,dim:`${w} × ${h} → ${outW} × ${outH} px`,warning:!met};
+}
+function getRawDPI(original){
+ const {jf,exif}=jpegData(original);const x=exifDPI(exif);
+ if(x)return x;
+ if(jf?.units===1)return jf.x;
+ if(jf?.units===2)return jf.x*2.54;
+ return null;
+}
+async function compAdd(files){
+ const incoming=Array.from(files||[]);if(!incoming.length)return;
+ if(compBusy)return compWarn('Há um processamento em andamento. Aguarde a conclusão.');
+ if(compItems.length+incoming.length>100)return compWarn(`Limite de 100 arquivos por lote. Já existem ${compItems.length} na lista; você selecionou mais ${incoming.length}. Use "Limpar lista" para iniciar outro lote.`);
+ const size=incoming.reduce((a,f)=>a+f.size,0), huge=incoming.filter(f=>f.size>50*byteMB);
+ if(huge.length)compWarn(`ATENÇÃO: ${huge.length} arquivo(s) ultrapassam 50 MB. O maior tem ${fmtSize(Math.max(...huge.map(x=>x.size)))}. Pode haver demora, uso intenso de memória ou falha por limite do navegador. Total deste lote: ${fmtSize(size)}.`);
+ else if(size>300*byteMB)compWarn(`Lote pesado (${fmtSize(size)}). O processamento e a montagem do ZIP podem ser demorados.`);else compWarn('');
+ compBusy=true;compUpdate();
+ const target=Number($('targetMB').value)*byteMB;
+ $('targetMB').disabled=true;
+ for(let i=0;i<incoming.length;i++){
+  const f=incoming[i];
+  compSetProgress(true,100*i/incoming.length,`Processando ${i+1}/${incoming.length}: ${f.name}`);
+  await compYield();
+  try{const r=await compOne(f,target);compItems.push({name:f.name,size:f.size,...r});}
+  catch(e){compItems.push({name:f.name,size:f.size,error:e?.message||'Erro desconhecido'});}
+  compUpdate();
+  compSetProgress(true,100*(i+1)/incoming.length,`Concluídos ${i+1} de ${incoming.length}`);
+  await compYield();
+ }
+ compBusy=false;$('targetMB').disabled=false;compUpdate();
+ compSetProgress(true,100,'Processamento concluído.');
+}
+$('compDrop').addEventListener('click',()=>$('compInput').click());
+$('compDrop').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('compInput').click();}});
+$('compInput').addEventListener('change',e=>{compAdd(e.target.files);e.target.value='';});
+for(const event of ['dragenter','dragover'])$('compDrop').addEventListener(event,e=>{e.preventDefault();$('compDrop').classList.add('drag');});
+for(const event of ['dragleave','drop'])$('compDrop').addEventListener(event,e=>{e.preventDefault();$('compDrop').classList.remove('drag');});
+$('compDrop').addEventListener('drop',e=>compAdd(e.dataTransfer.files));
+$('compClear').addEventListener('click',()=>{if(compBusy)return;compItems.splice(0);compWarn('');compSetProgress(false,0,'');compUpdate();});
+$('compRows').addEventListener('click',e=>{const b=e.target.closest('[data-ci]');if(!b)return;const x=compItems[Number(b.dataset.ci)];if(x?.bytes)save(new Blob([x.bytes],{type:'image/jpeg'}),x.name);});
+$('compZip').addEventListener('click',async()=>{
+ if(compBusy)return;
+ const valid=compItems.filter(x=>x.bytes);
+ if(!valid.length)return;
+ compBusy=true;compUpdate();compSetProgress(true,1,'Montando ZIP (a memória necessária pode ser alta)…');
+ await compYield();
+ try{
+  const zip=buildZIP(valid);
+  compSetProgress(true,100,'Pacote ZIP pronto.');
+  save(zip,'Matias_JPG_Comprimidos.zip');
+ }catch(e){compWarn('Não foi possível montar o ZIP: '+e.message+'. Você ainda pode baixar os arquivos individualmente.');}
+ finally{compBusy=false;compUpdate();}
+});
+compUpdate();
+
 </script>
 </body>
 </html>
