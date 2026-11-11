@@ -1,0 +1,27 @@
+MATIAS ENCADERNAÇÕES — NORMALIZADOR JPEG SEM RECOMPRESSÃO
+
+COMO UTILIZAR
+1. Abra index.html no Chrome, Edge ou outro navegador moderno.
+2. Selecione fotos JPG/JPEG (ou arraste para a área indicada).
+3. Baixe cada JPG individualmente ou todos juntos no ZIP.
+4. Verifique o resultado no Laboratório Matias.
+
+COMO PUBLICAR NO GITHUB PAGES
+1. Crie um repositório no GitHub (por exemplo: matias-normalizador-jpeg).
+2. Envie o arquivo index.html para a raiz do repositório.
+3. Em Settings > Pages, selecione Deploy from a branch, branch main e pasta /(root).
+4. Salve e acesse a URL do GitHub Pages exibida no painel.
+
+O QUE A FERRAMENTA FAZ
+- Se o JPEG NÃO possuir marcador APP0/JFIF, insere 18 bytes de cabeçalho JFIF logo após FF D8.
+- Se já possuir JFIF, deixa o JPEG original sem alterações.
+- Não decodifica nem recodifica os pixels.
+- Não altera EXIF, orientação, perfil de cor, resolução ou qualidade.
+- Trabalha localmente: não envia arquivos para servidor.
+- O ZIP utiliza método STORE (sem compressão).
+
+IMPORTANTE
+O sucesso foi confirmado pelo usuário para uma imagem A específica.
+Outros problemas de JPEG podem exigir procedimentos diferentes; o aplicativo não promete corrigir arquivos já marcados com JFIF, nem fotos com corrupção estrutural.
+Se o navegador ficar sem memória, processe lotes menores.
+O ZIP clássico suporta até ~4 GB e 65.535 arquivos por pacote; esta ferramenta tem esses limites.
